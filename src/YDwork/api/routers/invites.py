@@ -7,6 +7,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
 
+from YDwork.api.common.client_ip import resolve_client_ip
 from YDwork.api.deps import get_server, require_permission, sign_token
 from YDwork.api.routers.auth import _user_json
 from YDwork.infra.errors import ErrorCode, YDworkError
@@ -31,12 +32,8 @@ def _service(server: Any) -> InviteService:
 
 
 def _client_id(request: Request) -> str:
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",", 1)[0].strip() or "unknown"
-    if request.client and request.client.host:
-        return request.client.host
-    return "unknown"
+    """Trusted client address for invite rate limiting (see ``resolve_client_ip``)."""
+    return resolve_client_ip(request)
 
 
 def _public_base(request: Request) -> str:

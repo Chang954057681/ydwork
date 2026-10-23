@@ -6,3 +6,8 @@ node_modules/
 .DS_Store
 *.log
 .env
+
+# Node / frontend
+dashboard/node_modules/
+dashboard/dist/
+node_modules/

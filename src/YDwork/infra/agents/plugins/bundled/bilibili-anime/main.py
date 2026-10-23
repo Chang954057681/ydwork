@@ -14,7 +14,7 @@ from typing import Any
 import httpx
 from octop_harness.plugins import PluginContext
 
-logger = logging.getLogger("octop.plugins.bilibili_anime")
+logger = logging.getLogger("YDwork.plugins.bilibili_anime")
 
 _TAG_RE = re.compile(r"<[^>]+>")
 _HEADERS = {

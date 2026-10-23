@@ -44,6 +44,12 @@ from YDwork.infra.setup.service import (
 
 logger = logging.getLogger(__name__)
 
+# YDwork 定制：平台自更新模块全局关闭。
+# 上游 octop 的自更新会拉取官方 PyPI 包并覆盖 YDwork 品牌层，
+# 因此本平台任何时候都不允许自行升级；升级由运维按 SOP 人工执行。
+# 如需恢复：改为 True 并重启容器。
+UPDATE_MODULE_ENABLED = False
+
 router = APIRouter(prefix="/update", tags=["update"])
 
 _STABLE_ONLY_KEY = "update.stable_only"
@@ -103,6 +109,14 @@ def _present_status(
     has_update = bool(latest and is_newer(latest, current))
     description = cached.get("description")
     notes = parse_changelog_for_version(description, latest) if has_update and latest else None
+    if not UPDATE_MODULE_ENABLED:
+        # 关闭更新模块：清空一切新版本信息，前端不会收到任何更新提示。
+        latest = None
+        latest_any = None
+        latest_stable = None
+        description = None
+        has_update = False
+        notes = None
     return {
         "current_version": current,
         "latest_version": latest,
@@ -145,7 +159,7 @@ def _build_status(
     current = get_local_version()
     if latest_any is None:
         latest_any = latest
-    if latest_any is None and error is None:
+    if latest_any is None and error is None and UPDATE_MODULE_ENABLED:
         info = fetch_pypi_info()
         if info is not None:
             latest_any = info.version
@@ -206,6 +220,11 @@ async def check_for_updates(
     _: Any = Depends(require_permission("update")),
     server: Any = Depends(get_server),
 ) -> dict[str, Any]:
+    if not UPDATE_MODULE_ENABLED:
+        raise YDworkError(
+            ErrorCode.FORBIDDEN,
+            "update module is disabled on this deployment",
+        )
     stable_only = _read_stable_only(server)
     pypi_info = await asyncio.to_thread(fetch_pypi_info)
     if pypi_info is None:
@@ -235,6 +254,11 @@ async def update_settings(
     _: Any = Depends(require_permission("update")),
 ) -> dict[str, Any]:
     """Persist whether automatic checks should ignore pre-release versions."""
+    if not UPDATE_MODULE_ENABLED:
+        raise YDworkError(
+            ErrorCode.FORBIDDEN,
+            "update module is disabled on this deployment",
+        )
     server.services.settings_repo.set(_STABLE_ONLY_KEY, "true" if body.stable_only else "false")
     cached = get_cached_status()
     if cached is None:
@@ -319,6 +343,11 @@ async def trigger_upgrade(
     server: Any = Depends(get_server),
     _: Any = Depends(require_permission("update")),
 ) -> dict[str, Any]:
+    if not UPDATE_MODULE_ENABLED:
+        raise YDworkError(
+            ErrorCode.FORBIDDEN,
+            "update module is disabled on this deployment",
+        )
     if get_editable_path() is not None:
         raise YDworkError(
             ErrorCode.FORBIDDEN,

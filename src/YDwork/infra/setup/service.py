@@ -169,7 +169,7 @@ def resolve_octop_executable(home: Path | None = None) -> Path:
     for candidate in (
         root / "bin" / "octop",
         root / "venv" / "bin" / "octop",
-        root / "venv" / "Scripts" / "octop.exe",
+        root / "venv" / "Scripts" / "YDwork.exe",
     ):
         if candidate.is_file():
             return candidate
@@ -177,7 +177,7 @@ def resolve_octop_executable(home: Path | None = None) -> Path:
     # Dev / conda / uv-tool installs: use the octop that invoked this command.
     for candidate in (
         Path(sys.executable).parent / "octop",
-        Path(sys.executable).parent / "octop.exe",
+        Path(sys.executable).parent / "YDwork.exe",
     ):
         if candidate.is_file():
             return candidate

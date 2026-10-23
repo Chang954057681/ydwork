@@ -1,0 +1,166 @@
+/* ===================================================================
+   芸台 YUNTAI 形状语言层 —— 豆形圆角 + 渐变发丝边 + 品牌渐变呼吸点
+   全站形状唯一收口：组件只准引用 --yt-* / .yt-*，禁止散落硬编码
+   =================================================================== */
+
+:root {
+  --yt-grad: linear-gradient(135deg, #5b8cff, #9b6cff);
+  --yt-bean: 14px 6px 14px 6px;
+  --yt-bean-sm: 12px 5px 12px 5px;
+  --yt-mint: #7fe0c3;
+}
+
+html[data-theme="light"] {
+  --yt-hairline: linear-gradient(
+    135deg,
+    rgba(91, 72, 217, 0.22),
+    rgba(91, 72, 217, 0.05) 55%,
+    rgba(91, 140, 255, 0.16)
+  );
+  --yt-hairline-active: rgba(91, 72, 217, 0.34);
+}
+
+html[data-theme="dark"] {
+  --yt-hairline: linear-gradient(
+    135deg,
+    rgba(155, 108, 255, 0.3),
+    rgba(155, 108, 255, 0.07) 55%,
+    rgba(91, 140, 255, 0.24)
+  );
+  --yt-hairline-active: rgba(155, 108, 255, 0.4);
+}
+
+/* 渐变发丝边卡片（豆形）—— 通过 padding/border-box 双背景实现 */
+.octop-card,
+.octop-card-small {
+  border-radius: var(--yt-bean) !important;
+}
+
+.octop-card {
+  border: 1px solid transparent !important;
+  background: linear-gradient(var(--fn-surface, #fff), var(--fn-surface, #fff)) padding-box,
+    var(--yt-hairline) border-box !important;
+}
+
+/* 主按钮：品牌渐变呼吸点 + 豆形 */
+.octop-btn-primary:not(:disabled) {
+  background: var(--yt-grad) !important;
+  border: none !important;
+  border-radius: var(--yt-bean-sm) !important;
+}
+
+.octop-btn-primary:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+/* 激活态发丝边 */
+.octop-card-active,
+.octop-card.selected {
+  border-color: var(--yt-hairline-active) !important;
+}
+
+/* ===================================================================
+   Yuntai: sidebar prominent "new chat" action (workDSH-inspired)
+   =================================================================== */
+.yt-newchat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 38px;
+  border: none;
+  border-radius: var(--yt-bean);
+  background: var(--yt-grad);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  position: relative;
+  box-shadow:
+    0 4px 14px -6px rgba(110, 91, 232, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+.yt-newchat-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 8px 20px -6px rgba(110, 91, 232, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.yt-newchat-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.98);
+}
+
+.yt-newchat-btn--icon {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto;
+  border-radius: 10px 6px 10px 6px;
+}
+
+/* ===================================================================
+   Yuntai: workDSH-style sidebar flyout submenus
+   =================================================================== */
+.yt-flyout-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 148px;
+}
+
+.yt-flyout-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--yt-bean);
+  background: transparent;
+  color: var(--fn-text-secondary);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.yt-flyout-item:hover {
+  background: var(--fn-sidebar-item-hover, rgba(110, 91, 232, 0.08));
+  color: var(--fn-text-primary);
+}
+
+.yt-flyout-item-active {
+  background: var(--fn-sidebar-item-active-bg);
+  color: var(--fn-sidebar-item-active-text);
+  font-weight: 500;
+}
+
+.yt-flyout-item-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--fn-text-tertiary);
+}
+
+.yt-flyout-item-active .yt-flyout-item-icon {
+  color: var(--fn-sidebar-item-active-text);
+}
+
+.yt-flyout-item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
