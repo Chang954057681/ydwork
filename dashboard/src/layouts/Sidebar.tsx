@@ -447,7 +447,7 @@ function NavList({
         const sectionKey = section.id ?? `flat-${sectionIndex}`;
         const isFlat = !section.id;
 
-        if (isFlat || isMobile) {
+        if (isFlat) {
           return (
             <div key={sectionKey} className={styles.navGroup}>
               <div className={styles.navGroupItems}>
