@@ -288,7 +288,11 @@
     "groupNameRequired": "请填写分组名称",
     "saveFailed": "没能保存导航布局",
     "dragToReorder": "拖动排序",
-    "chatHistory": "会话列表"
+    "chatHistory": "会话列表",
+    "pc": "产品选型",
+    "pcProducts": "产品",
+    "pcSalespersons": "销售员",
+    "pcDepartments": "部门"
   },
   "skillPackages": {
     "title": "技能包",
@@ -5169,7 +5173,6 @@
     "title": "登录",
     "subtitle": "懂你、帮你、陪你成长的智能伙伴",
     "username": "用户名或邮箱",
-    "usernameHint": "可用安装时设置的用户名或邮箱",
     "password": "密码",
     "remember": "记住登录状态",
     "submit": "登录",

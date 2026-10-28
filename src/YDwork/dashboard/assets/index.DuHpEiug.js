@@ -1,0 +1,1 @@
+import{j as jsxRuntimeExports}from"./vendor-react.DWWhhpb4.js";function PcCatalogPage({page}){return jsxRuntimeExports.jsx("iframe",{src:`/custom/product-catalog/${page}.html`,title:`product-catalog-${page}`,style:{border:"none",width:"100%",height:"calc(100vh - 56px)",display:"block",backgroundColor:"var(--fn-bg, #f7f6fc)"}})}export{PcCatalogPage as default};

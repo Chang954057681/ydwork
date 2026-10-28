@@ -19,7 +19,6 @@ import {
   ChevronUp,
   Settings,
   Palette,
-  CircleHelp,
   KeyRound,
   Lock,
   LockOpen,
@@ -53,7 +52,6 @@ import {
 } from "../pages/Admin/Users/ProfileAvatar";
 import styles from "./AvatarDropdown.module.less";
 
-const HELP_FEEDBACK_URL = "https://octop.cloud";
 const APP_OAUTH_KINDS = new Set(["feishu", "dingtalk", "wecom"]);
 
 const PASSWORD_FIELD_ICON_PROPS = {
@@ -364,17 +362,6 @@ export default function AvatarDropdown({
         </div>
         <ThemeSwitcher compact />
       </div>
-
-      <a
-        className={styles.menuItem}
-        href={HELP_FEEDBACK_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => setMenuOpen(false)}
-      >
-        <CircleHelp size={16} strokeWidth={1.8} />
-        <span>{t("account.helpFeedback")}</span>
-      </a>
 
       {onCustomizeNav ? (
         <button

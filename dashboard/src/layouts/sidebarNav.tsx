@@ -7,6 +7,7 @@ import {
   Waypoints,
   Link2,
   Database,
+  Building2,
   Cpu,
   Users as UsersIcon,
   Activity,
@@ -111,6 +112,9 @@ export const SIDEBAR_GROUPED_NAV_KEYS = [
   "channels",
   "connectors",
   "skill-packages",
+  "pc-products",
+  "pc-salespersons",
+  "pc-departments",
   "bridge",
   "workbench",
   "remote-desktop",
@@ -176,6 +180,37 @@ export function buildNavSections(
     },
   ];
 
+  // 产品选型（MG 产品库实例）：构建开关 VITE_ENABLE_PC_CATALOG + product_catalog 权限双门控
+  if (
+    import.meta.env?.VITE_ENABLE_PC_CATALOG === "1" &&
+    userCan(user, "product_catalog")
+  ) {
+    sections.push({
+      id: "pc",
+      groupKey: "nav.pc",
+      items: [
+        {
+          key: "pc-products",
+          path: "/pc/products",
+          icon: <Package size={iconSize} strokeWidth={iconStroke} />,
+          labelKey: "nav.pcProducts",
+        },
+        {
+          key: "pc-salespersons",
+          path: "/pc/salespersons",
+          icon: <UsersIcon size={iconSize} strokeWidth={iconStroke} />,
+          labelKey: "nav.pcSalespersons",
+        },
+        {
+          key: "pc-departments",
+          path: "/pc/departments",
+          icon: <Building2 size={iconSize} strokeWidth={iconStroke} />,
+          labelKey: "nav.pcDepartments",
+        },
+      ],
+    });
+  }
+
   const settingsItems: NavItem[] = [
     {
       key: "personalization",
@@ -235,8 +270,9 @@ export function buildNavSections(
   }
   // Server desktop + phone share one nav entry; phone tab also needs host capability.
   if (
-    userCan(user, "desktop") ||
-    (opts?.mobileEnabled && userCan(user, "mobile"))
+    import.meta.env?.VITE_DISABLE_REMOTE_ACCESS !== "1" &&
+    (userCan(user, "desktop") ||
+      (opts?.mobileEnabled && userCan(user, "mobile")))
   ) {
     controlItems.push({
       key: "remote-desktop",

@@ -83,7 +83,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const [palette, setPaletteState] = useState<ThemePalette>(() => {
     // loadAppearanceOnBoot is idempotent for the migrated JSON shape.
-    return loadAppearanceOnBoot().palette;
+    const boot = loadAppearanceOnBoot().palette;
+    // One-time migration: "rose" was the pre-yuntai default palette. Browsers
+    // that never explicitly picked a palette would stay stuck on rose after
+    // the yuntai upgrade. Deliberate later choices are kept (migration flag).
+    if (boot === "rose") {
+      const MIGRATED = "octop:palette-rose-migrated";
+      if (!localStorage.getItem(MIGRATED)) {
+        localStorage.setItem(MIGRATED, "1");
+        return DEFAULT_PALETTE;
+      }
+    }
+    return boot;
   });
 
   const [customColor, setCustomColorState] = useState<string>(

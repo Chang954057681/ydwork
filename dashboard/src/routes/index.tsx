@@ -13,6 +13,10 @@ const PersonalizationPage = lazy(
 );
 const ACPPage = lazy(() => import("../pages/Agent/ACP"));
 const TokenUsagePage = lazy(() => import("../pages/Control/TokenUsage"));
+const PcCatalogPage = lazy(() => import("../pages/PcCatalog"));
+// 远程访问构建开关（生产禁用：VITE_DISABLE_REMOTE_ACCESS=1）
+const REMOTE_ACCESS_DISABLED =
+  import.meta.env?.VITE_DISABLE_REMOTE_ACCESS === "1";
 
 // Lazy-loaded pages — Control
 const RemoteDesktopPage = lazy(() => import("../pages/Control/RemoteDesktop"));
@@ -39,6 +43,10 @@ function RedirectPreserveSearch({ to }: { to: string }) {
   return <Navigate to={`${to}${location.search}${location.hash}`} replace />;
 }
 
+// 产品选型（MG 产品库实例）构建开关
+const PC_CATALOG_ENABLED =
+  import.meta.env?.VITE_ENABLE_PC_CATALOG === "1";
+
 export interface RouteConfig {
   path: string;
   element: React.ReactNode;
@@ -54,6 +62,9 @@ export const pathToKey: Record<string, string> = {
   "/connectors": "connectors",
   "/skill-packages": "skill-packages",
   "/knowledge-bases": "knowledge-bases",
+  "/pc/products": "pc-products",
+  "/pc/salespersons": "pc-salespersons",
+  "/pc/departments": "pc-departments",
   "/bridge": "bridge",
   "/personalization": "personalization",
   "/personalization/skills": "personalization",
@@ -166,6 +177,14 @@ export const routeConfigs: RouteConfig[] = [
     element: <RedirectPreserveSearch to="/personalization/skills" />,
   },
   { path: "/token-usage", element: <TokenUsagePage /> },
+  // 产品选型（MG 产品库实例，构建开关 VITE_ENABLE_PC_CATALOG）
+  ...(PC_CATALOG_ENABLED
+    ? [
+        { path: "/pc/products", element: <PcCatalogPage page="products" /> },
+        { path: "/pc/salespersons", element: <PcCatalogPage page="salespersons" /> },
+        { path: "/pc/departments", element: <PcCatalogPage page="departments" /> },
+      ]
+    : []),
 
   // Control (RequirePermission via pathPermissionKeys in MainLayout)
   { path: "/acp", element: <ACPPage /> },
@@ -185,19 +204,23 @@ export const routeConfigs: RouteConfig[] = [
     path: "/remote-browser",
     element: <RedirectPreserveSearch to="/workbench/browser" />,
   },
-  { path: "/remote-desktop", element: <RemoteDesktopPage /> },
-  { path: "/remote-desktop/desktop", element: <RemoteDesktopPage /> },
-  { path: "/remote-desktop/phone", element: <RemoteDesktopPage /> },
-  { path: "/remote-desktop/phone/screen", element: <RemoteDesktopPage /> },
-  { path: "/remote-desktop/phone/shell", element: <RemoteDesktopPage /> },
-  {
-    path: "/remote-phone",
-    element: <RedirectPreserveSearch to="/remote-desktop/phone" />,
-  },
-  {
-    path: "/remote-android",
-    element: <Navigate to="/remote-desktop/phone" replace />,
-  },
+  ...(REMOTE_ACCESS_DISABLED
+    ? []
+    : [
+        { path: "/remote-desktop", element: <RemoteDesktopPage /> },
+        { path: "/remote-desktop/desktop", element: <RemoteDesktopPage /> },
+        { path: "/remote-desktop/phone", element: <RemoteDesktopPage /> },
+        { path: "/remote-desktop/phone/screen", element: <RemoteDesktopPage /> },
+        { path: "/remote-desktop/phone/shell", element: <RemoteDesktopPage /> },
+        {
+          path: "/remote-phone",
+          element: <RedirectPreserveSearch to="/remote-desktop/phone" />,
+        },
+        {
+          path: "/remote-android",
+          element: <Navigate to="/remote-desktop/phone" replace />,
+        },
+      ]),
   {
     path: "/subagents",
     element: <RedirectPreserveSearch to="/personalization/subagents" />,

@@ -288,7 +288,11 @@
     "groupNameRequired": "Enter a group name",
     "saveFailed": "Could not save the navigation layout",
     "dragToReorder": "Drag to reorder",
-    "chatHistory": "Session list"
+    "chatHistory": "Session list",
+    "pc": "Products",
+    "pcProducts": "Products",
+    "pcSalespersons": "Salespersons",
+    "pcDepartments": "Departments"
   },
   "skillPackages": {
     "title": "Skill Packages",
@@ -5169,7 +5173,6 @@
     "title": "Sign in",
     "subtitle": "An intelligent partner that understands you, helps you, and grows with you",
     "username": "Username or email",
-    "usernameHint": "Use the username or email you set during setup",
     "password": "Password",
     "remember": "Remember me",
     "submit": "Sign in",
